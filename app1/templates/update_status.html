@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Details</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+
+        body{
+            background:#f5f7fa;
+        }
+
+        .card{
+            margin-top:40px;
+            border:none;
+            border-radius:15px;
+            box-shadow:0 0 15px rgba(0,0,0,.1);
+        }
+
+        .card-header{
+            border-radius:15px 15px 0 0 !important;
+        }
+
+        .detail{
+            margin-bottom:18px;
+        }
+
+        .detail strong{
+            color:#0d6efd;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <div class="card-header bg-primary text-white">
+
+            <h3 class="text-center">
+                Application Details
+            </h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <h4 class="mb-4 text-primary">
+                {{ application.job.position }}
+            </h4>
+
+            <div class="detail">
+                <strong>Candidate Name :</strong>
+                {{ application.candidate.username }}
+            </div>
+
+            <div class="detail">
+                <strong>Phone Number :</strong>
+                {{ application.phone }}
+            </div>
+
+            <div class="detail">
+                <strong>Qualification :</strong>
+                {{ application.qualification }}
+            </div>
+
+            <div class="detail">
+                <strong>Experience :</strong>
+                {{ application.experience }}
+            </div>
+
+            <div class="detail">
+                <strong>Skills :</strong><br>
+                {{ application.skills }}
+            </div>
+
+            <div class="detail">
+                <strong>Resume :</strong><br>
+
+                <a href="{{ application.resume.url }}"
+                   class="btn btn-outline-primary"
+                   target="_blank">
+
+                    Download Resume
+
+                </a>
+
+            </div>
+
+            <div class="detail">
+
+                <strong>Cover Letter :</strong>
+
+                <div class="border rounded p-3 mt-2 bg-light">
+
+                    {{ application.cover_letter }}
+
+                </div>
+
+            </div>
+
+            <div class="detail">
+
+                <strong>Current Status :</strong>
+
+                {% if application.status == "Pending" %}
+
+                    <span class="badge bg-warning text-dark">
+                        Pending
+                    </span>
+
+                {% elif application.status == "Selected" %}
+
+                    <span class="badge bg-success">
+                        Selected
+                    </span>
+
+                {% else %}
+
+                    <span class="badge bg-danger">
+                        Rejected
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+            <hr>
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <label class="form-label">
+                    Change Application Status
+                </label>
+
+                <select name="status" class="form-select">
+
+                    <option value="Pending"
+                    {% if application.status == "Pending" %}selected{% endif %}>
+                        Pending
+                    </option>
+
+                    <option value="Selected"
+                    {% if application.status == "Selected" %}selected{% endif %}>
+                        Selected
+                    </option>
+
+                    <option value="Rejected"
+                    {% if application.status == "Rejected" %}selected{% endif %}>
+                        Rejected
+                    </option>
+
+                </select>
+
+                <br>
+
+                <div class="d-flex justify-content-between">
+
+                    <a href="{% url 'view_applications' %}"
+                       class="btn btn-secondary">
+
+                        Back
+
+                    </a>
+
+                    <button class="btn btn-primary">
+
+                        Update Status
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
+
