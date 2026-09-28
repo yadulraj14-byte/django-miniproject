@@ -269,35 +269,42 @@ def delete_candidate(request,id):
 
 @login_required
 def profile(request):
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
 
-    profile = get_object_or_404(
-        UserProfile,
-        user=request.user
+    is_profile_complete = any([
+        profile.phone,
+        profile.qualification,
+        profile.skills,
+        profile.address,
+        profile.profile_picture
+    ])
+
+    return render(
+        request,
+        "profile.html",
+        {
+            "profile": profile,
+            "is_profile_complete": is_profile_complete
+        }
     )
 
-    return render(request, "profile.html", {"profile": profile})
 @login_required
 def edit_profile(request):
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
 
-    profile, created = UserProfile.objects.get_or_create(
-        user=request.user
-    )
-
+   
     form = UserProfileForm(
         request.POST or None,
         request.FILES or None,
         instance=profile
     )
 
-    if form.is_valid():
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            return redirect("profile")
 
-        form.save()
-
-        return redirect("profile")
-
-    return render(request,
-                  "edit_profile.html",
-                  {"form":form})
+    return render(request, "edit_profile.html", {"form": form})
 
 
 @login_required
